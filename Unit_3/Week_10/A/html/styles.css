@@ -1,0 +1,25 @@
+h1 {
+    color: blue;
+    text-align:  center;
+}
+
+p {
+    color: rgb(20, 133, 232);
+    text-align: justify;
+    font-size: larger;
+}
+
+ol {
+    color: green;
+}
+
+ul {
+    color: darkorange;
+}
+
+img {
+    width: 300px;
+    border: 3px solid #1859bb;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import plotly.express as px
 import plotly
+import plotly.graph_objs as go
 import json
 
 app = Flask(__name__)
@@ -29,11 +30,37 @@ def upload_csv():
         stats = data.describe().round(2).to_dict()  # Generate descriptive statistics, rounded to 2 decimals
 
         # Generate a Plotly graph (example with the first column)
-        first_column = df.columns[1]
-        fig = px.scatter(df, x=df.index, y=first_column, title=f"Graph of {first_column}")
-        graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        
+        col1 = data.columns[0]
+        col2 = data.columns[1] if len(data.columns) > 1 else col1
+        fig1 = go.Figure()
+        fig1.add_trace(go.Bar(
+            x=df[col1].head(10),
+            y=df[col2].head(10),
+            marker_color="blue"
+        ))
+        fig1.update_layout(title="Gráfico de Barras", xaxis_title=col1, yaxis_title=col2)
 
-        return jsonify({'stats': stats, 'graph': graph_json})
+        # Gráfico 2: Primeras columnas como gráfico de líneas
+        fig2 = go.Figure()
+        fig2.add_trace(go.Scatter(
+            x=df[col1].head(10),
+            y=df[col2].head(10),
+        ))
+        fig2.update_layout(title="Gráfico de Líneas", xaxis_title=col1, yaxis_title=col2)
+
+        # Convertir gráficos a JSON
+        graph_1 = fig1.to_json()
+        graph_2 = fig2.to_json()
+
+        return jsonify({
+            "stats": stats,
+            "graph_1": graph_1,
+            "graph_2": graph_2
+        })
+
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
