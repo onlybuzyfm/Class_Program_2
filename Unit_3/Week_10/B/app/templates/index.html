@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Statistics and Visualization</title>
+    <!-- Incluye la librería de Plotly -->
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: rgba(41, 208, 208, 0.64);
+        }
+        .container {
+            max-width: 1600px;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(15, 215, 149, 0.64);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color:rgb(216, 245, 70);
+            color: white;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSV Statistics and Visualization</h1>
+
+        <!-- Subida del archivo CSV -->
+        <div>
+            <h2>Upload a CSV File</h2>
+            <input type="file" id="csvFile">
+            <button onclick="uploadFile()">Upload</button>
+        </div>
+
+        <!-- Sección de estadísticas -->
+        <div id="stats-section">
+            <h2>Descriptive Statistics</h2>
+            <div id="stats-table"></div>
+        </div>
+
+        <!-- Primer gráfico -->
+        <div>
+            <h2>Visualization 1: Bar Chart</h2>
+            <div id="chart" style="height: 400px;"></div>
+        </div>
+
+        <!-- Segundo gráfico -->
+        <div>
+            <h2>Visualization 2: Line Chart</h2>
+            <div id="chart_2" style="height: 400px;"></div>
+        </div>
+        
+        <div>
+            <h2>Visualization 3: Box Plot</h2>
+            <div id="chart_3" style="height: 400px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Función para subir el archivo
+        function uploadFile() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    displayStats(data.stats);  // Mostrar estadísticas en tabla
+                    displayChart_1(data.graph_1);  // Primer gráfico
+                    displayChart_2(data.graph_2);// Segundo gráfico
+                    displayChart_3(data.graph_3);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Función para mostrar estadísticas
+        function displayStats(stats) {
+            const statsDiv = document.getElementById('stats-table');
+            statsDiv.innerHTML = '';  // Limpiar contenido previo
+
+            const table = document.createElement('table');
+            const headers = Object.keys(stats);  // Columnas del CSV
+            const metrics = Object.keys(stats[headers[0]]);  // Métricas (mean, std, etc.)
+
+            // Encabezado de la tabla
+            const headerRow = document.createElement('tr');
+            const firstHeader = document.createElement('th');
+            firstHeader.textContent = 'Metric';
+            headerRow.appendChild(firstHeader);
+
+            headers.forEach(column => {
+                const th = document.createElement('th');
+                th.textContent = column;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Filas de datos
+            metrics.forEach(metric => {
+                const row = document.createElement('tr');
+                const metricCell = document.createElement('td');
+                metricCell.textContent = metric;
+                row.appendChild(metricCell);
+
+                headers.forEach(column => {
+                    const cell = document.createElement('td');
+                    cell.textContent = stats[column][metric];
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            });
+
+            statsDiv.appendChild(table);
+        }
+
+        // Función para mostrar el primer gráfico
+        function displayChart_1(graphJSON) {
+            const chartDiv = document.getElementById('chart');
+            const graphData = JSON.parse(graphJSON);
+            Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
+        }
+
+        // Función para mostrar el segundo gráfico
+        function displayChart_2(graphJSON) {
+            const chartDiv = document.getElementById('chart_2');
+            const graphData = JSON.parse(graphJSON);
+            Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
+        }
+
+        function displayChart_3(graphJSON) {
+            const chartDiv = document.getElementById('chart_3');
+            const graphData = JSON.parse(graphJSON);
+            Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
+        }
+    </script>
+</body>
+</html>

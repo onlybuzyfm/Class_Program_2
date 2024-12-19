@@ -80,6 +80,11 @@
             <h2>Visualization 2: Line Chart</h2>
             <div id="chart_2" style="height: 400px;"></div>
         </div>
+        
+        <div>
+            <h2>Visualization 3: Box Plot</h2>
+            <div id="chart_3" style="height: 400px;"></div>
+        </div>
     </div>
 
     <script>
@@ -107,7 +112,8 @@
                 } else {
                     displayStats(data.stats);  // Mostrar estadísticas en tabla
                     displayChart_1(data.graph_1);  // Primer gráfico
-                    displayChart_2(data.graph_2);  // Segundo gráfico
+                    displayChart_2(data.graph_2);// Segundo gráfico
+                    displayChart_3(data.graph_3);
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -164,6 +170,12 @@
         // Función para mostrar el segundo gráfico
         function displayChart_2(graphJSON) {
             const chartDiv = document.getElementById('chart_2');
+            const graphData = JSON.parse(graphJSON);
+            Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
+        }
+
+        function displayChart_3(graphJSON) {
+            const chartDiv = document.getElementById('chart_3');
             const graphData = JSON.parse(graphJSON);
             Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
         }
