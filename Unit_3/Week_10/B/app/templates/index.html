@@ -42,7 +42,7 @@
         button {
             margin-top: 10px;
             padding: 10px;
-            background-color: #4caf50;
+            background-color:rgb(76, 101, 175);
             color: white;
             border: none;
             border-radius: 5px;
@@ -86,6 +86,11 @@
             <h2>Visualization 3: Box Plot</h2>
             <div id="chart_3" style="height: 400px;"></div>
         </div>
+
+        <div>
+            <h2 style= "text-align: center;"> Visualization 3: Box Plot</h2>
+            <div id="chart_4" style="text-align: center;"></div>
+        </div>
     </div>
 
     <script>
@@ -115,6 +120,7 @@
                     displayChart_1(data.graph_1);  // Primer gráfico
                     displayChart_2(data.graph_2);// Segundo gráfico
                     displayChart_3(data.graph_3);
+                    displayChart_4(data.graph_4);
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -177,6 +183,12 @@
 
         function displayChart_3(graphJSON) {
             const chartDiv = document.getElementById('chart_3');
+            const graphData = JSON.parse(graphJSON);
+            Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
+        }
+
+        function displayChart_4(graphJSON) {
+            const chartDiv = document.getElementById('chart_4');
             const graphData = JSON.parse(graphJSON);
             Plotly.newPlot(chartDiv, graphData.data, graphData.layout);
         }

@@ -49,15 +49,56 @@ def upload_csv():
             y=df[col2].head(10),
         ))
         fig2.update_layout(title="Gráfico de Líneas", xaxis_title=col1, yaxis_title=col2)
+        
+        
+        fig3 = go.Figure()
+        
+        fig3.add_trace(go.Box(
+        y=df[col2],  # Reemplaza col1 con el nombre de la columna que deseas analizar
+        name=col2    # Etiqueta del eje X o el nombre del boxplot
+        ))
+        
+        fig3.update_layout(title="Gráfico de Caja y Bigotes", xaxis_title=col2)
+        
+        
+        data_corr = df.iloc[:, 1:5]
+        
+        correlation_matrix = data_corr.corr()
+        
+        fig4 = go.Figure (
+        data=go.Heatmap(
+        z=correlation_matrix.values,
+        x=correlation_matrix.columns,
+        y=correlation_matrix.columns,
+        colorscale="Twilight",
+        colorbar=dict(title="Correlation"),
+        zmin=-1,  # Minimum correlation value
+        zmax=1    # Maximum correlation value
+        )
+            )
+        fig4.update_layout(
+        title="Correlation Matrix Heatmap",
+        xaxis_title="Features",
+        yaxis_title="Features",
+        xaxis=dict(tickangle=45),
+        yaxis=dict(autorange="reversed"),  # Reverse y-axis for traditional matrix layout
+        width=600,
+        height=600
+        )   
+        
 
         # Convertir gráficos a JSON
         graph_1 = fig1.to_json()
         graph_2 = fig2.to_json()
+        graph_3 = fig3.to_json()
+        graph_4 = fig4.to_json()
 
         return jsonify({
             "stats": stats,
             "graph_1": graph_1,
-            "graph_2": graph_2
+            "graph_2": graph_2,
+            "graph_3": graph_3,
+            "graph_4": graph_4
         })
 
     
