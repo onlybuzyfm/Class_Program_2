@@ -1,0 +1,10 @@
+Si Temperature es Warm y Humidity es Wet, entonces salida es Medium.
+Si Temperature es Cold y Humidity es Dry, entonces salida es Low.
+Si Temperature es Cold y Humidity es Normal, entonces salida es Low.
+Si Temperature es Cold y Humidity es Wet, entonces salida es Low.
+Si Temperature es Warm y Humidity es Dry, entonces salida es Medium.
+Si Temperature es Warm y Humidity es Normal, entonces salida es Medium.
+Si Temperature es Warm y Humidity es Wet, entonces salida es Medium.
+Si Temperature es Hot y Humidity es Dry, entonces salida es High.
+Si Temperature es Hot y Humidity es Normal, entonces salida es High.
+Si Temperature es Hot y Humidity es Wet, entonces salida es High.
